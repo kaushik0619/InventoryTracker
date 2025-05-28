@@ -176,7 +176,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteExpense(id: number): Promise<boolean> {
     const result = await db.delete(expenses).where(eq(expenses.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async getInventoryRequests(): Promise<InventoryRequest[]> {
@@ -218,8 +218,8 @@ export class DatabaseStorage implements IStorage {
     const lowStockProducts = await this.getLowStockProducts();
 
     const totalInventory = allProducts.reduce((sum, product) => sum + product.quantity, 0);
-    const totalInventoryValue = allProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
-    const monthlyExpenses = allExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const totalInventoryValue = allProducts.reduce((sum, product) => sum + (parseFloat(product.price) * product.quantity), 0);
+    const monthlyExpenses = allExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
     const totalClients = allClients.length;
     const lowStockCount = lowStockProducts.length;
 
