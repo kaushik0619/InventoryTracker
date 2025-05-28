@@ -8,6 +8,8 @@ import {
   inventoryRequests, type InventoryRequest, type InsertInventoryRequest,
   activities, type Activity, type InsertActivity
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc, lt } from "drizzle-orm";
 
 export interface IStorage {
   // User methods
@@ -59,6 +61,177 @@ export interface IStorage {
   // Dashboard methods
   getLowStockProducts(): Promise<Product[]>;
   getDashboardStats(): Promise<any>;
+}
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+
+  async getProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+
+  async getProduct(id: number): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product || undefined;
+  }
+
+  async createProduct(product: InsertProduct): Promise<Product> {
+    const [newProduct] = await db.insert(products).values(product).returning();
+    return newProduct;
+  }
+
+  async updateProduct(id: number, product: Partial<InsertProduct>): Promise<Product | undefined> {
+    const [updated] = await db.update(products).set(product).where(eq(products.id, id)).returning();
+    return updated || undefined;
+  }
+
+  async deleteProduct(id: number): Promise<boolean> {
+    const result = await db.delete(products).where(eq(products.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async getClients(): Promise<Client[]> {
+    return await db.select().from(clients);
+  }
+
+  async getClient(id: number): Promise<Client | undefined> {
+    const [client] = await db.select().from(clients).where(eq(clients.id, id));
+    return client || undefined;
+  }
+
+  async createClient(client: InsertClient): Promise<Client> {
+    const [newClient] = await db.insert(clients).values(client).returning();
+    return newClient;
+  }
+
+  async updateClient(id: number, client: Partial<InsertClient>): Promise<Client | undefined> {
+    const [updated] = await db.update(clients).set(client).where(eq(clients.id, id)).returning();
+    return updated || undefined;
+  }
+
+  async deleteClient(id: number): Promise<boolean> {
+    const result = await db.delete(clients).where(eq(clients.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async getOrders(): Promise<Order[]> {
+    return await db.select().from(orders);
+  }
+
+  async getOrder(id: number): Promise<Order | undefined> {
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order || undefined;
+  }
+
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const [newOrder] = await db.insert(orders).values(order).returning();
+    return newOrder;
+  }
+
+  async updateOrder(id: number, order: Partial<InsertOrder>): Promise<Order | undefined> {
+    const [updated] = await db.update(orders).set(order).where(eq(orders.id, id)).returning();
+    return updated || undefined;
+  }
+
+  async getOrderItems(orderId: number): Promise<OrderItem[]> {
+    return await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+  }
+
+  async createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem> {
+    const [newOrderItem] = await db.insert(orderItems).values(orderItem).returning();
+    return newOrderItem;
+  }
+
+  async getExpenses(): Promise<Expense[]> {
+    return await db.select().from(expenses);
+  }
+
+  async getExpense(id: number): Promise<Expense | undefined> {
+    const [expense] = await db.select().from(expenses).where(eq(expenses.id, id));
+    return expense || undefined;
+  }
+
+  async createExpense(expense: InsertExpense): Promise<Expense> {
+    const [newExpense] = await db.insert(expenses).values(expense).returning();
+    return newExpense;
+  }
+
+  async updateExpense(id: number, expense: Partial<InsertExpense>): Promise<Expense | undefined> {
+    const [updated] = await db.update(expenses).set(expense).where(eq(expenses.id, id)).returning();
+    return updated || undefined;
+  }
+
+  async deleteExpense(id: number): Promise<boolean> {
+    const result = await db.delete(expenses).where(eq(expenses.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getInventoryRequests(): Promise<InventoryRequest[]> {
+    return await db.select().from(inventoryRequests);
+  }
+
+  async getInventoryRequest(id: number): Promise<InventoryRequest | undefined> {
+    const [request] = await db.select().from(inventoryRequests).where(eq(inventoryRequests.id, id));
+    return request || undefined;
+  }
+
+  async createInventoryRequest(request: InsertInventoryRequest): Promise<InventoryRequest> {
+    const [newRequest] = await db.insert(inventoryRequests).values(request).returning();
+    return newRequest;
+  }
+
+  async updateInventoryRequest(id: number, request: Partial<InsertInventoryRequest>): Promise<InventoryRequest | undefined> {
+    const [updated] = await db.update(inventoryRequests).set(request).where(eq(inventoryRequests.id, id)).returning();
+    return updated || undefined;
+  }
+
+  async getActivities(limit: number = 10): Promise<Activity[]> {
+    return await db.select().from(activities).orderBy(desc(activities.timestamp)).limit(limit);
+  }
+
+  async createActivity(activity: InsertActivity): Promise<Activity> {
+    const [newActivity] = await db.insert(activities).values(activity).returning();
+    return newActivity;
+  }
+
+  async getLowStockProducts(): Promise<Product[]> {
+    return await db.select().from(products).where(lt(products.quantity, products.minQuantity));
+  }
+
+  async getDashboardStats(): Promise<any> {
+    const allProducts = await this.getProducts();
+    const allExpenses = await this.getExpenses();
+    const allClients = await this.getClients();
+    const lowStockProducts = await this.getLowStockProducts();
+
+    const totalInventory = allProducts.reduce((sum, product) => sum + product.quantity, 0);
+    const totalInventoryValue = allProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0);
+    const monthlyExpenses = allExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const totalClients = allClients.length;
+    const lowStockCount = lowStockProducts.length;
+
+    return {
+      totalInventory,
+      totalInventoryValue,
+      monthlyRevenue: totalInventoryValue * 0.3, // Sample calculation
+      totalClients,
+      lowStockCount,
+      profit: totalInventoryValue - monthlyExpenses
+    };
+  }
 }
 
 export class MemStorage implements IStorage {
@@ -549,4 +722,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
