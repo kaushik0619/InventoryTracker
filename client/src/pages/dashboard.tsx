@@ -95,7 +95,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <StatCard
               title="Total Inventory"
-              value={dashboardData?.stats.totalInventory || 0}
+              value={dashboardData?.totalInventory || 0}
               icon={<Package className="h-5 w-5 text-white" />}
               iconBgColor="bg-blue-500"
               change={{
@@ -107,7 +107,7 @@ export default function Dashboard() {
             
             <StatCard
               title="Monthly Revenue"
-              value={`$${dashboardData?.stats.monthlyRevenue.toLocaleString() || 0}`}
+              value={`$${dashboardData?.monthlyRevenue?.toLocaleString() || 0}`}
               icon={<DollarSign className="h-5 w-5 text-white" />}
               iconBgColor="bg-green-500"
               change={{
@@ -119,7 +119,7 @@ export default function Dashboard() {
             
             <StatCard
               title="Total Clients"
-              value={dashboardData?.stats.totalClients || 0}
+              value={dashboardData?.totalClients || 0}
               icon={<Users className="h-5 w-5 text-white" />}
               iconBgColor="bg-purple-500"
               change={{
@@ -131,7 +131,7 @@ export default function Dashboard() {
             
             <StatCard
               title="Low Stock Items"
-              value={dashboardData?.stats.lowStockCount || 0}
+              value={dashboardData?.lowStockCount || 0}
               icon={<AlertTriangle className="h-5 w-5 text-white" />}
               iconBgColor="bg-red-500"
               action={{
@@ -143,8 +143,8 @@ export default function Dashboard() {
 
           {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <InventoryChart data={dashboardData?.inventoryTrends || []} />
-            <RevenueChart data={dashboardData?.financeTrends || []} />
+            <InventoryChart data={[]} />
+            <RevenueChart data={[]} />
           </div>
 
           {/* Recent Activity & Low Stock Items */}
@@ -155,7 +155,7 @@ export default function Dashboard() {
             />
             
             <LowStockTable
-              products={dashboardData?.lowStock || []}
+              products={[]}
               onOrderInventory={handleOrderInventory}
             />
           </div>
