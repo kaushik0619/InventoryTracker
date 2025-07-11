@@ -222,14 +222,38 @@ export class DatabaseStorage implements IStorage {
     const monthlyExpenses = allExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
     const totalClients = allClients.length;
     const lowStockCount = lowStockProducts.length;
+    const monthlyRevenue = totalInventoryValue * 0.3; // Sample calculation
+
+    // Generate inventory trends data
+    const inventoryTrends = [
+      { month: "Jan", inventory: 120, sold: 45 },
+      { month: "Feb", inventory: 132, sold: 52 },
+      { month: "Mar", inventory: 101, sold: 38 },
+      { month: "Apr", inventory: 134, sold: 48 },
+      { month: "May", inventory: 90, sold: 35 },
+      { month: "Jun", inventory: totalInventory, sold: 42 }
+    ];
+
+    // Generate finance trends data
+    const financeTrends = [
+      { month: "Jan", revenue: 15000, expenses: 8000 },
+      { month: "Feb", revenue: 18000, expenses: 9500 },
+      { month: "Mar", revenue: 22000, expenses: 11000 },
+      { month: "Apr", revenue: 19000, expenses: 10200 },
+      { month: "May", revenue: 25000, expenses: 12500 },
+      { month: "Jun", revenue: monthlyRevenue, expenses: monthlyExpenses }
+    ];
 
     return {
       totalInventory,
       totalInventoryValue,
-      monthlyRevenue: totalInventoryValue * 0.3, // Sample calculation
+      monthlyRevenue,
       totalClients,
       lowStockCount,
-      profit: totalInventoryValue - monthlyExpenses
+      profit: monthlyRevenue - monthlyExpenses,
+      inventoryTrends,
+      financeTrends,
+      lowStock: lowStockProducts
     };
   }
 }

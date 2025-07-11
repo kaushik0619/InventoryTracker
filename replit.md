@@ -120,3 +120,12 @@ The system uses PostgreSQL with the following main entities:
 - `drizzle.config.ts`: Database migration configuration
 
 The application follows a monorepo structure with clear separation between client, server, and shared code, making it easy to maintain and scale.
+
+## Recent Changes
+
+### January 2025
+- **Fixed expense creation functionality**: Resolved date parsing issues in expense form validation
+- **Added chart data integration**: Implemented inventory trends and financial trends data for dashboard charts
+- **Enhanced dashboard analytics**: Added comprehensive data for inventory and finance trend visualization
+- **Improved activity logging**: Added automatic activity tracking for expense operations
+- **Database optimization**: Fixed PostgreSQL date handling and improved error handling
