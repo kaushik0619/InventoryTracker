@@ -245,12 +245,14 @@ export class DatabaseStorage implements IStorage {
     ];
 
     return {
-      totalInventory,
-      totalInventoryValue,
-      monthlyRevenue,
-      totalClients,
-      lowStockCount,
-      profit: monthlyRevenue - monthlyExpenses,
+      stats: {
+        totalInventory,
+        totalInventoryValue,
+        monthlyRevenue,
+        totalClients,
+        lowStockCount,
+        profit: monthlyRevenue - monthlyExpenses
+      },
       inventoryTrends,
       financeTrends,
       lowStock: lowStockProducts
