@@ -4,12 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface TopBarProps {
-  title?: string;
-  onMenuClick?: () => void;
-  onOpenSidebar?: () => void;
+  title: string;
+  onOpenSidebar: () => void;
 }
 
-export function TopBar({ title, onMenuClick, onOpenSidebar }: TopBarProps) {
+export function TopBar({ title, onOpenSidebar }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
@@ -18,13 +17,13 @@ export function TopBar({ title, onMenuClick, onOpenSidebar }: TopBarProps) {
         <div className="flex justify-between h-16">
           <div className="flex">
             <button
-              onClick={onMenuClick || onOpenSidebar}
+              onClick={onOpenSidebar}
               className="md:hidden px-4 text-gray-500 focus:outline-none"
             >
               <Menu className="h-6 w-6" />
             </button>
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">{title || "InventoryPro"}</h1>
+              <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
             </div>
           </div>
           <div className="flex items-center">

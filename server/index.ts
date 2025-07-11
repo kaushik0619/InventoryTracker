@@ -2,9 +2,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
-// Set NODE_ENV to development if not already set
-process.env.NODE_ENV = "development";
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,40 +43,17 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    console.error("Server error:", err);
     res.status(status).json({ message });
-    
-    // Don't throw the error - this crashes the server
-    // throw err;
+    throw err;
   });
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  console.log("NODE_ENV:", process.env.NODE_ENV);
-  console.log("app.get('env'):", app.get("env"));
-  console.log("Setting up Vite server...");
-  
-  // Add a simple test route
-  app.get("/test", (req, res) => {
-    res.send(`
-      <html>
-        <head><title>Test Page</title></head>
-        <body>
-          <h1>Server is Working!</h1>
-          <p>Time: ${new Date().toISOString()}</p>
-          <p>Environment: ${process.env.NODE_ENV}</p>
-        </body>
-      </html>
-    `);
-  });
-
-  try {
+  if (app.get("env") === "development") {
     await setupVite(app, server);
-    console.log("Vite server setup completed successfully");
-  } catch (error) {
-    console.error("Error setting up Vite server:", error);
-    throw error;
+  } else {
+    serveStatic(app);
   }
 
   // ALWAYS serve the app on port 5000

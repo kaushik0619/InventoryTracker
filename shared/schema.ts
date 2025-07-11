@@ -72,7 +72,7 @@ export const orders = pgTable("orders", {
   clientId: integer("client_id").notNull(),
   date: timestamp("date").notNull(),
   status: text("status").notNull().default("pending"),
-  total: text("total").notNull(),
+  total: numeric("total").notNull(),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).pick({
@@ -88,7 +88,7 @@ export const orderItems = pgTable("order_items", {
   orderId: integer("order_id").notNull(),
   productId: integer("product_id").notNull(),
   quantity: integer("quantity").notNull(),
-  price: text("price").notNull(),
+  price: numeric("price").notNull(),
 });
 
 export const insertOrderItemSchema = createInsertSchema(orderItems).pick({
@@ -102,7 +102,7 @@ export const insertOrderItemSchema = createInsertSchema(orderItems).pick({
 export const expenses = pgTable("expenses", {
   id: serial("id").primaryKey(),
   category: text("category").notNull(),
-  amount: text("amount").notNull(),
+  amount: numeric("amount").notNull(),
   date: timestamp("date").notNull(),
   description: text("description"),
 });
