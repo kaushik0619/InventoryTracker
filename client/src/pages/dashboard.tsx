@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { 
-  Package, DollarSign, Users, AlertTriangle, 
-  Plus 
-} from "lucide-react";
+import { Package, DollarSign, Users, AlertTriangle, Plus } from "lucide-react";
 import { TopBar } from "@/components/layout/topbar";
 import { Sidebar } from "@/components/layout/sidebar";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -29,11 +26,14 @@ export default function Dashboard() {
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [_, navigate] = useLocation();
 
-  const { data: dashboardData, isLoading: isDashboardLoading } = useQuery<DashboardData>({
-    queryKey: ["/api/dashboard"],
-  });
+  const { data: dashboardData, isLoading: isDashboardLoading } =
+    useQuery<DashboardData>({
+      queryKey: ["/api/dashboard"],
+    });
 
-  const { data: activities, isLoading: isActivitiesLoading } = useQuery<Activity[]>({
+  const { data: activities, isLoading: isActivitiesLoading } = useQuery<
+    Activity[]
+  >({
     queryKey: ["/api/activities"],
   });
 
@@ -72,7 +72,9 @@ export default function Dashboard() {
         <main className="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
           {/* Date Range Selector */}
           <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-medium text-gray-900 mb-2 sm:mb-0">Dashboard Overview</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-2 sm:mb-0">
+              Dashboard Overview
+            </h2>
             <div className="inline-flex items-center">
               <span className="mr-2 text-sm text-gray-500">Filter by:</span>
               <Select value={dateRange} onValueChange={setDateRange}>
@@ -95,48 +97,48 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <StatCard
               title="Total Inventory"
-              value={dashboardData?.stats.totalInventory || 0}
+              value={dashboardData?.stats?.totalInventory || 0}
               icon={<Package className="h-5 w-5 text-white" />}
               iconBgColor="bg-blue-500"
               change={{
                 value: 12,
                 type: "increase",
-                text: "from last month"
+                text: "from last month",
               }}
             />
-            
+
             <StatCard
               title="Monthly Revenue"
-              value={`$${dashboardData?.stats.monthlyRevenue.toLocaleString() || 0}`}
+              value={`$${dashboardData?.stats?.monthlyRevenue?.toLocaleString() || 0}`}
               icon={<DollarSign className="h-5 w-5 text-white" />}
               iconBgColor="bg-green-500"
               change={{
                 value: 8.2,
                 type: "increase",
-                text: "from last month"
+                text: "from last month",
               }}
             />
-            
+
             <StatCard
               title="Total Clients"
-              value={dashboardData?.stats.totalClients || 0}
+              value={dashboardData?.stats?.totalClients || 0}
               icon={<Users className="h-5 w-5 text-white" />}
               iconBgColor="bg-purple-500"
               change={{
                 value: 5.3,
                 type: "increase",
-                text: "from last month"
+                text: "from last month",
               }}
             />
-            
+
             <StatCard
               title="Low Stock Items"
-              value={dashboardData?.stats.lowStockCount || 0}
+              value={dashboardData?.stats?.lowStockCount || 0}
               icon={<AlertTriangle className="h-5 w-5 text-white" />}
               iconBgColor="bg-red-500"
               action={{
                 text: "View all",
-                onClick: () => navigate("/inventory")
+                onClick: () => navigate("/inventory"),
               }}
             />
           </div>
@@ -153,7 +155,7 @@ export default function Dashboard() {
               activities={activities || []}
               onViewAll={handleViewAllActivities}
             />
-            
+
             <LowStockTable
               products={dashboardData?.lowStock || []}
               onOrderInventory={handleOrderInventory}
@@ -171,17 +173,15 @@ export default function Dashboard() {
           <Plus className="h-6 w-6" />
           <span className="sr-only">Request Inventory</span>
         </button>
-        <span 
-          className="absolute bottom-16 right-0 bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        >
+        <span className="absolute bottom-16 right-0 bg-gray-800 text-white text-xs rounded py-1 px-2 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           Request Inventory
         </span>
       </div>
 
       {/* Inventory Request Modal */}
-      <InventoryRequestForm 
-        isOpen={isRequestModalOpen} 
-        onClose={closeRequestModal} 
+      <InventoryRequestForm
+        isOpen={isRequestModalOpen}
+        onClose={closeRequestModal}
       />
     </div>
   );

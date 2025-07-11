@@ -9,7 +9,7 @@ import {
   Receipt,
   ClipboardList,
   Settings,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
@@ -29,11 +29,21 @@ const sidebarItems: SidebarItem[] = [
   { name: "Clients", path: "/clients", icon: <Users className="w-6" /> },
   { name: "Reports", path: "/reports", icon: <BarChart className="w-6" /> },
   { name: "Expenses", path: "/expenses", icon: <Receipt className="w-6" /> },
-  { name: "Inventory Requests", path: "/requests", icon: <ClipboardList className="w-6" /> },
+  {
+    name: "Inventory Requests",
+    path: "/requests",
+    icon: <ClipboardList className="w-6" />,
+  },
   { name: "Settings", path: "/settings", icon: <Settings className="w-6" /> },
 ];
 
-export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export function Sidebar({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const [location] = useLocation();
   const { toast } = useToast();
 
@@ -49,7 +59,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       toast({
         variant: "destructive",
         title: "Logout failed",
-        description: "An error occurred while logging out."
+        description: "An error occurred while logging out.",
       });
     }
   };
@@ -58,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     <div
       className={cn(
         "fixed inset-y-0 left-0 flex-shrink-0 w-64 bg-gray-800 z-10 shadow-lg md:static md:block transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
       )}
     >
       <div className="flex h-full flex-col">
@@ -66,14 +76,25 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
         <div className="flex items-center justify-between h-16 px-6 bg-gray-900">
           <div className="flex items-center space-x-2">
             <Package className="text-white" />
-            <span className="text-lg font-bold text-white">InventoryPro</span>
+            <span className="text-lg font-bold text-white">Quantra</span>
           </div>
           <button
             onClick={onClose}
             className="md:hidden text-gray-300 hover:text-white"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -89,7 +110,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                       "flex items-center p-2 text-base font-medium rounded-lg",
                       location === item.path
                         ? "text-white bg-gray-700"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
                     )}
                   >
                     {item.icon}
@@ -110,8 +131,12 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
               </div>
             </div>
             <div className="ml-3">
-              <div className="text-sm font-medium text-white">{user?.name || "User"}</div>
-              <div className="text-xs text-gray-300">{user?.role || "User"}</div>
+              <div className="text-sm font-medium text-white">
+                {user?.name || "User"}
+              </div>
+              <div className="text-xs text-gray-300">
+                {user?.role || "User"}
+              </div>
             </div>
             <button
               onClick={handleLogout}

@@ -7,9 +7,12 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import Dashboard from "@/pages/dashboard";
 import Inventory from "@/pages/inventory";
+import Orders from "@/pages/orders";
 import Clients from "@/pages/clients";
+import Reports from "@/pages/reports";
 import Expenses from "@/pages/expenses";
 import Requests from "@/pages/requests";
+import Settings from "@/pages/settings";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { User } from "@shared/schema";
@@ -54,14 +57,23 @@ function Router() {
       <Route path="/inventory">
         <ProtectedRoute component={Inventory} />
       </Route>
+      <Route path="/orders">
+        <ProtectedRoute component={Orders} />
+      </Route>
       <Route path="/clients">
         <ProtectedRoute component={Clients} />
+      </Route>
+      <Route path="/reports">
+        <ProtectedRoute component={Reports} />
       </Route>
       <Route path="/expenses">
         <ProtectedRoute component={Expenses} />
       </Route>
       <Route path="/requests">
         <ProtectedRoute component={Requests} />
+      </Route>
+      <Route path="/settings">
+        <ProtectedRoute component={Settings} />
       </Route>
       {/* Fallback to 404 */}
       <Route component={NotFound} />
