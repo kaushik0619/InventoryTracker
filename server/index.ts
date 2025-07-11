@@ -46,8 +46,11 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    console.error("Server error:", err);
     res.status(status).json({ message });
-    throw err;
+    
+    // Don't throw the error - this crashes the server
+    // throw err;
   });
 
   // importantly only setup vite in development and after
@@ -57,6 +60,20 @@ app.use((req, res, next) => {
   console.log("app.get('env'):", app.get("env"));
   console.log("Setting up Vite server...");
   
+  // Add a simple test route
+  app.get("/test", (req, res) => {
+    res.send(`
+      <html>
+        <head><title>Test Page</title></head>
+        <body>
+          <h1>Server is Working!</h1>
+          <p>Time: ${new Date().toISOString()}</p>
+          <p>Environment: ${process.env.NODE_ENV}</p>
+        </body>
+      </html>
+    `);
+  });
+
   try {
     await setupVite(app, server);
     console.log("Vite server setup completed successfully");

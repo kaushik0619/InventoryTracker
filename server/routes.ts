@@ -22,6 +22,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     })
   );
 
+  // Health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   // Auth middleware
   const requireAuth = (req: Request, res: Response, next: Function) => {
     if (!req.session.userId) {
