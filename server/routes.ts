@@ -409,6 +409,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Order routes
+  app.get("/api/orders", requireAuth, async (req, res) => {
+    try {
+      const orders = await storage.getOrders();
+      return res.status(200).json(orders);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/orders/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const order = await storage.getOrder(id);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      return res.status(200).json(order);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/orders", requireAuth, async (req, res) => {
+    try {
+      const orderData = req.body;
+      const order = await storage.createOrder(orderData);
+      return res.status(201).json(order);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.put("/api/orders/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const orderData = req.body;
+      
+      const updatedOrder = await storage.updateOrder(id, orderData);
+      if (!updatedOrder) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      return res.status(200).json(updatedOrder);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Low stock products
   app.get("/api/low-stock", requireAuth, async (req, res) => {
     try {

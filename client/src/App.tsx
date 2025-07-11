@@ -10,6 +10,9 @@ import Inventory from "@/pages/inventory";
 import Clients from "@/pages/clients";
 import Expenses from "@/pages/expenses";
 import Requests from "@/pages/requests";
+import Orders from "@/pages/orders";
+import Reports from "@/pages/reports";
+import Settings from "@/pages/settings";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { User } from "@shared/schema";
@@ -62,6 +65,15 @@ function Router() {
       </Route>
       <Route path="/requests">
         <ProtectedRoute component={Requests} />
+      </Route>
+      <Route path="/orders">
+        <ProtectedRoute component={Orders} />
+      </Route>
+      <Route path="/reports">
+        <ProtectedRoute component={Reports} />
+      </Route>
+      <Route path="/settings">
+        <ProtectedRoute component={Settings} />
       </Route>
       {/* Fallback to 404 */}
       <Route component={NotFound} />
