@@ -82,9 +82,13 @@ function Router() {
 }
 
 function App() {
+  console.log("App component loaded");
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
+      <div style={{ padding: "20px", backgroundColor: "lightblue" }}>
+        <h1>InventoryPro Loading...</h1>
+        <Router />
+      </div>
       <Toaster />
     </QueryClientProvider>
   );
